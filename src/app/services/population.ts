@@ -7,7 +7,7 @@ import * as Papa from 'papaparse';
   providedIn: 'root',
 })
 export class PopulationService {
-  private popUrl = 'https://datahub.io/core/population/_r/data/population.csv';
+  private popUrl = './population.csv';
   private countriesUrl =
     'https://public.opendatasoft.com/api/records/1.0/search/?dataset=world-administrative-boundaries&q=';
 

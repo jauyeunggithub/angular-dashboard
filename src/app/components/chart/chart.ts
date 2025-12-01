@@ -16,6 +16,8 @@ export class ChartComponent {
   @Output() countrySelected = new EventEmitter<string>();
 
   onChartClick(event: any) {
-    if (event?.name) this.countrySelected.emit(event.name);
+    if (event?.name) {
+      this.countrySelected.emit(event.name);
+    }
   }
 }
