@@ -18,6 +18,7 @@ import SimpleFillSymbol from '@arcgis/core/symbols/SimpleFillSymbol';
 import SimpleLineSymbol from '@arcgis/core/symbols/SimpleLineSymbol';
 import SimpleMarkerSymbol from '@arcgis/core/symbols/SimpleMarkerSymbol';
 import '@arcgis/core/assets/esri/themes/light/main.css';
+import { ArcGISGeometry } from '../../models/arc-gisgeometry';
 
 type Coordinates =
   | [number, number] // Point
@@ -92,7 +93,7 @@ export class MapComponent implements OnInit, OnChanges {
       }
 
       // Function to convert GeoJSON to ArcGIS geometry
-      const convertGeoJSONToArcGIS = (geo: { type: string; coordinates: any }) => {
+      const convertGeoJSONToArcGIS = (geo: { type: string; coordinates: unknown[] }) => {
         switch (geo.type) {
           case 'Point':
             return { type: 'point', longitude: geo.coordinates[0], latitude: geo.coordinates[1] };
@@ -127,7 +128,7 @@ export class MapComponent implements OnInit, OnChanges {
 
       geometries.forEach((geometry) => {
         const graphic = new Graphic({
-          geometry,
+          geometry: geometry as ArcGISGeometry,
           symbol: this.getSymbolForGeometryType(geometry.type),
           attributes: {
             ...c,

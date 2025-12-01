@@ -1,11 +1,27 @@
+// Allowed geometry types
 type GeometryType = 'point' | 'multipoint' | 'polyline' | 'polygon';
 
-interface ArcGISGeometry {
-  type: GeometryType;
-  longitude?: number;
-  latitude?: number;
-  points?: number[][];
-  paths?: number[][][];
-  rings?: number[][][];
-  coordinates: number[] | number[][] | number[][][];
+// Strongly typed ArcGIS geometries
+interface ArcGISPoint {
+  type: 'point';
+  longitude: number;
+  latitude: number;
 }
+
+interface ArcGISMultipoint {
+  type: 'multipoint';
+  points: number[][];
+}
+
+interface ArcGISPolyline {
+  type: 'polyline';
+  paths: number[][][];
+}
+
+interface ArcGISPolygon {
+  type: 'polygon';
+  rings: number[][][];
+}
+
+// Union type for all geometries
+export type ArcGISGeometry = ArcGISPoint | ArcGISMultipoint | ArcGISPolyline | ArcGISPolygon;
