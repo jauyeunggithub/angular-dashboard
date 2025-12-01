@@ -126,13 +126,24 @@ export class MapComponent implements OnInit, OnChanges {
             id: c.fields.iso3,
           },
           popupTemplate: {
-            title: c.fields['Country Name'] || 'Country',
-            content: `Population: ${c.fields['Value'] || 'N/A'}`,
+            title: c.fields['name'] || 'Country',
+            content: `Population: ${this.getLatestPopulation(c) || 'N/A'}`,
           },
         });
         this.graphicsLayer.add(graphic);
       });
     });
+  }
+
+  getLatestPopulation(country: Country): number | null {
+    if (!this.populationData?.length) {
+      return null;
+    }
+
+    const sorted = [...this.populationData]
+      .filter((c) => c['Country Code'] === country.fields.iso3)
+      .sort((a, b) => b.Year - a.Year);
+    return sorted?.[0]?.Value;
   }
 
   // Helper function to return a default symbol based on geometry type
