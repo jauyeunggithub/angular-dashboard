@@ -28,7 +28,6 @@ export class DashboardComponent implements OnInit {
 
     this.popService.getCountriesData().subscribe((data) => {
       this.countriesData = data;
-      console.log(this.countriesData);
     });
   }
 
@@ -42,7 +41,7 @@ export class DashboardComponent implements OnInit {
     const values = countryData.map((c) => Number(c.Value));
 
     this.chartOption = {
-      title: { text: `Population of ${this.selectedCountry.name}` },
+      title: { text: `Population of ${this.selectedCountry.fields.name}` },
       tooltip: { trigger: 'axis' },
       xAxis: { type: 'category', data: years },
       yAxis: { type: 'value' },
@@ -61,7 +60,6 @@ export class DashboardComponent implements OnInit {
       }
       return booleanPointInPolygon(clickedPoint.geometry, c.fields.geo_shape);
     });
-    console.log(country);
 
     if (country) {
       this.selectedCountry = country;

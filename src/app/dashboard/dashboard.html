@@ -2,9 +2,10 @@
   <div class="top-row">
     <app-chart [chartOption]="chartOption"
       (countrySelected)="onCountrySelected($event)"></app-chart>
-    <app-info-card [country]="selectedCountry"></app-info-card>
+    <app-info-card [country]="selectedCountry"
+      [populationData]="populationData"></app-info-card>
   </div>
-  <div class="bottom-row">
+  <div class=" bottom-row">
     <app-map [populationData]="populationData"
       (countrySelected)="onCountrySelected($event)"></app-map>
   </div>

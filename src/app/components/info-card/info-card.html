@@ -1,10 +1,9 @@
-<div *ngIf="country" class="info-card">
-  <h3>{{ country.name }}</h3>
-  <p>Population: {{ country.Value }}</p>
-  <p>Region: {{ country.region }}</p>
+@if (country) {
+<div class="info-card">
+  <h3>{{ country.fields.name }}</h3>
+  <p>Population: {{ latestPopulation }}</p>
+  <p>Region: {{ country.fields.region }}</p>
 </div>
-<div *ngIf="country" class="info-card">
-  <h3>{{ country.name }}</h3>
-  <p>Population: {{ country.Value }}</p>
-  <p>Region: {{ country.region }}</p>
-</div>
+
+
+}

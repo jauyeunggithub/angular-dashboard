@@ -8,4 +8,16 @@ import { CommonModule } from '@angular/common';
 })
 export class InfoCardComponent {
   @Input() country: any;
+  @Input() populationData: any[] = [];
+
+  get latestPopulation(): number | null {
+    if (!this.populationData?.length) {
+      return null;
+    }
+
+    const sorted = [...this.populationData]
+      .filter((c) => c['Country Code'] === this.country.fields.iso3)
+      .sort((a, b) => b.Year - a.Year);
+    return sorted[0].Value;
+  }
 }
