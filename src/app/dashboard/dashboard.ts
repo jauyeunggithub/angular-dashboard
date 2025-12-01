@@ -5,7 +5,6 @@ import { MapComponent } from '../components/map/map';
 import { InfoCardComponent } from '../components/info-card/info-card';
 import { PopulationService } from '../services/population';
 import type { EChartsOption } from 'echarts';
-import { point, booleanPointInPolygon } from '@turf/turf';
 import { Country } from '../models/country';
 import { PopulationRecord } from '../models/population-record';
 
@@ -54,17 +53,7 @@ export class DashboardComponent implements OnInit {
   }
 
   /** Called from MapComponent when map is clicked */
-  onCountrySelected(click: { latitude: number; longitude: number }): void {
-    const clickedPoint = point([click.longitude, click.latitude]);
-
-    // Find the first country whose geo_shape contains the clicked point
-    const country = this.countriesData.find((c: any) => {
-      if (!c.fields.geo_shape) {
-        return false;
-      }
-      return booleanPointInPolygon(clickedPoint.geometry, c.fields.geo_shape);
-    });
-
+  onCountrySelected(country: Country): void {
     if (country) {
       this.selectedCountry = country;
       this.setupChart();

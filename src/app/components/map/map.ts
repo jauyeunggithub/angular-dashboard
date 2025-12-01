@@ -25,7 +25,7 @@ import SimpleMarkerSymbol from '@arcgis/core/symbols/SimpleMarkerSymbol';
   styleUrls: ['./map.css'],
 })
 export class MapComponent implements OnInit, OnChanges {
-  @Output() countrySelected = new EventEmitter<{ latitude: number; longitude: number }>();
+  @Output() countrySelected = new EventEmitter<any>();
   @Input() populationData: PopulationRecord[] = [];
   @Input() countriesData: Country[] = [];
   view!: MapView;
@@ -47,12 +47,23 @@ export class MapComponent implements OnInit, OnChanges {
     this.loadCountries();
 
     // Click listener for map
-    this.view.on('click', (event) => {
-      const mapPoint = event.mapPoint;
-      this.countrySelected.emit({
-        latitude: mapPoint.latitude,
-        longitude: mapPoint.longitude,
-      });
+    this.view.on('click', async (event) => {
+      try {
+        const response = await this.view.hitTest(event);
+
+        // response.results is an array of HitTestResult
+        const countryGraphic = response.results
+          // filter for graphics that belong to your graphicsLayer
+          .map((r: any) => r.graphic)
+          .find((g) => g && this.graphicsLayer.graphics.includes(g));
+
+        if (countryGraphic?.attributes) {
+          // Emit the stored country object
+          this.countrySelected.emit(countryGraphic.attributes);
+        }
+      } catch (error) {
+        console.error('HitTest error:', error);
+      }
     });
   }
 
@@ -98,7 +109,9 @@ export class MapComponent implements OnInit, OnChanges {
 
       const arcgisGeometry = convertGeoJSONToArcGIS(geoShape);
 
-      if (!arcgisGeometry) return;
+      if (!arcgisGeometry) {
+        return;
+      }
 
       // Handle MultiPolygon (array of polygons)
       const geometries = Array.isArray(arcgisGeometry) ? arcgisGeometry : [arcgisGeometry];
@@ -107,6 +120,10 @@ export class MapComponent implements OnInit, OnChanges {
         const graphic = new Graphic({
           geometry,
           symbol: this.getSymbolForGeometryType(geometry.type),
+          attributes: {
+            ...c,
+            id: c.fields.iso3,
+          },
           popupTemplate: {
             title: c.fields['Country Name'] || 'Country',
             content: `Population: ${c.fields['Value'] || 'N/A'}`,

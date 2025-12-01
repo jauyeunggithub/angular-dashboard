@@ -3,12 +3,7 @@ import { CommonModule } from '@angular/common';
 import { NgxEchartsModule, NGX_ECHARTS_CONFIG } from 'ngx-echarts';
 import type { EChartsOption } from 'echarts';
 import * as echarts from 'echarts';
-
-interface EChartsClickParams {
-  name?: string;
-  dataIndex?: number;
-  value?: number | any[];
-}
+import { Country } from '../../models/country';
 
 @Component({
   selector: 'app-chart',
@@ -19,5 +14,5 @@ interface EChartsClickParams {
 })
 export class ChartComponent {
   @Input() chartOption: EChartsOption = {};
-  @Output() countrySelected = new EventEmitter<{ latitude: number; longitude: number }>();
+  @Output() countrySelected = new EventEmitter<Country>();
 }
