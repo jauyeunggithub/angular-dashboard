@@ -1,5 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { PopulationRecord } from '../../models/population-record';
+import { Country } from '../../models/country';
 @Component({
   selector: 'app-info-card',
   imports: [CommonModule],
@@ -7,8 +9,8 @@ import { CommonModule } from '@angular/common';
   styleUrl: './info-card.css',
 })
 export class InfoCardComponent {
-  @Input() country: any;
-  @Input() populationData: any[] = [];
+  @Input() country: Country = {} as Country;
+  @Input() populationData: PopulationRecord[] = [];
 
   get latestPopulation(): number | null {
     if (!this.populationData?.length) {

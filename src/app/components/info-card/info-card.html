@@ -1,8 +1,8 @@
 @if (country) {
 <div class="info-card">
-  <h3>{{ country.fields.name }}</h3>
+  <h3>{{ country.fields['name'] }}</h3>
   <p>Population: {{ latestPopulation }}</p>
-  <p>Region: {{ country.fields.region }}</p>
+  <p>Region: {{ country.fields['region'] }}</p>
 </div>
 
 

@@ -4,6 +4,12 @@ import { NgxEchartsModule, NGX_ECHARTS_CONFIG } from 'ngx-echarts';
 import type { EChartsOption } from 'echarts';
 import * as echarts from 'echarts';
 
+interface EChartsClickParams {
+  name?: string;
+  dataIndex?: number;
+  value?: number | any[];
+}
+
 @Component({
   selector: 'app-chart',
   imports: [CommonModule, NgxEchartsModule],
@@ -14,10 +20,4 @@ import * as echarts from 'echarts';
 export class ChartComponent {
   @Input() chartOption: EChartsOption = {};
   @Output() countrySelected = new EventEmitter<{ latitude: number; longitude: number }>();
-
-  onChartClick(event: any) {
-    if (event?.name) {
-      this.countrySelected.emit(event.name);
-    }
-  }
 }
