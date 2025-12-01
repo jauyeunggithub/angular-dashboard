@@ -8,10 +8,10 @@ import Graphic from '@arcgis/core/Graphic';
   selector: 'app-map',
   imports: [CommonModule],
   templateUrl: './map.html',
-  styleUrl: './map.css',
+  styleUrls: ['./map.css'], // fixed typo
 })
 export class MapComponent implements OnInit {
-  @Output() countrySelected = new EventEmitter<any>();
+  @Output() countrySelected = new EventEmitter<{ latitude: number; longitude: number }>();
   @Input() populationData: any[] = [];
   view!: MapView;
 
@@ -35,31 +35,22 @@ export class MapComponent implements OnInit {
       const graphic = new Graphic({
         geometry: {
           type: 'point',
-          longitude: c.longitude || 0,
-          latitude: c.latitude || 0,
+          longitude: c.longitude ?? 0,
+          latitude: c.latitude ?? 0,
         },
-        attributes: { name: c.name, population: c.Value },
-        popupTemplate: {
-          title: '{name}',
-          content: 'Population: {population}',
-        },
+        popupTemplate: {},
       });
 
       this.view.graphics.add(graphic);
     });
 
-    // Click listener using hitTest
-    this.view.on('click', async (event) => {
-      const hit = await this.view.hitTest(event);
-
-      // Filter results that actually have a graphic
-      const graphicHit = hit.results
-        .map((r: any) => r.graphic) // r may be any type
-        .filter((g: any): g is Graphic => !!g);
-
-      if (graphicHit.length > 0) {
-        this.countrySelected.emit(graphicHit[0].attributes);
-      }
+    // Click listener: emit lat/lon instead of attributes
+    this.view.on('click', (event) => {
+      const mapPoint = event.mapPoint;
+      this.countrySelected.emit({
+        latitude: mapPoint.latitude,
+        longitude: mapPoint.longitude,
+      });
     });
   }
 }
