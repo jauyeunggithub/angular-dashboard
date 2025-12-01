@@ -1,4 +1,4 @@
-@if (country?.fields) {
+@if (country && country.fields) {
 <div class="info-card">
   <h3>{{ country.fields['name'] }}</h3>
   <p>Population: {{ latestPopulation }}</p>

@@ -22,6 +22,16 @@
               {
                 "glob": "**/*",
                 "input": "public"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/@arcgis/core/assets/esri/themes/base/fonts",
+                "output": "assets/fonts"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/@arcgis/core/assets/esri/themes/base/images",
+                "output": "assets/images"
               }
             ],
             "styles": [
