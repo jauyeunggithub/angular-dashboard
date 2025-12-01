@@ -5,7 +5,7 @@ import { MapComponent } from '../components/map/map';
 import { InfoCardComponent } from '../components/info-card/info-card';
 import { PopulationService } from '../services/population';
 import type { EChartsOption } from 'echarts';
-import { point, booleanPointInPolygon } from '@turf/turf';
+import { point, booleanPointInPolygon, simplify } from '@turf/turf';
 
 @Component({
   selector: 'app-dashboard',
@@ -15,16 +15,20 @@ import { point, booleanPointInPolygon } from '@turf/turf';
 })
 export class DashboardComponent implements OnInit {
   populationData: any[] = [];
+  countriesData: any;
   selectedCountry: any;
   chartOption: EChartsOption = {};
 
   constructor(private popService: PopulationService) {}
 
   ngOnInit(): void {
-    this.popService.getCombinedData().subscribe((data) => {
+    this.popService.getPopulationData().subscribe((data) => {
       this.populationData = data;
-      this.selectedCountry = this.populationData[0];
-      this.setupChart();
+    });
+
+    this.popService.getCountriesData().subscribe((data) => {
+      this.countriesData = data;
+      console.log(this.countriesData);
     });
   }
 
@@ -32,7 +36,7 @@ export class DashboardComponent implements OnInit {
     if (!this.selectedCountry) return;
 
     const countryData = this.populationData.filter(
-      (c) => c['Country Code'] === this.selectedCountry['Country Code']
+      (c) => c['Country Code'] === this.selectedCountry.fields.iso3
     );
     const years = countryData.map((c) => c.Year);
     const values = countryData.map((c) => Number(c.Value));
@@ -51,15 +55,18 @@ export class DashboardComponent implements OnInit {
     const clickedPoint = point([click.longitude, click.latitude]);
 
     // Find the first country whose geo_shape contains the clicked point
-    const country = this.populationData.find((c) => {
-      if (!c.geo_shape) return false;
-      return booleanPointInPolygon(clickedPoint, c.geo_shape);
+    const country = this.countriesData.find((c: any) => {
+      if (!c.fields.geo_shape) {
+        return false;
+      }
+      return booleanPointInPolygon(clickedPoint.geometry, c.fields.geo_shape);
     });
+    console.log(country);
 
     if (country) {
       this.selectedCountry = country;
       this.setupChart();
-      console.log('Clicked country:', country.name);
+      console.log('Clicked country:', country.fields.name);
     }
   }
 }

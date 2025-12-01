@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { forkJoin, map, Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import * as Papa from 'papaparse';
 
 @Injectable({
@@ -9,26 +9,19 @@ import * as Papa from 'papaparse';
 export class PopulationService {
   private popUrl = './population.csv';
   private countriesUrl =
-    'https://public.opendatasoft.com/api/records/1.0/search/?dataset=world-administrative-boundaries&q=';
+    'https://public.opendatasoft.com/api/records/1.0/search/?dataset=world-administrative-boundaries&q=&rows=5000';
 
   constructor(private http: HttpClient) {}
 
-  getCombinedData(): Observable<any[]> {
-    const popData$ = this.http.get(this.popUrl, { responseType: 'text' });
-    const countriesData$ = this.http.get(this.countriesUrl);
+  getPopulationData(): Observable<any[]> {
+    return this.http
+      .get(this.popUrl, { responseType: 'text' })
+      .pipe(map((csv) => Papa.parse(csv, { header: true, skipEmptyLines: true }).data));
+  }
 
-    return forkJoin([popData$, countriesData$]).pipe(
-      map(([popCsv, countries]: any) => {
-        const popJson = Papa.parse(popCsv, { header: true, skipEmptyLines: true }).data;
-        const records = countries.records;
-
-        return popJson
-          .map((p: any) => {
-            const country = records.find((c: any) => c.fields.iso3 === p['Country Code']);
-            return country ? { ...p, ...country.fields } : null;
-          })
-          .filter(Boolean);
-      })
+  getCountriesData(): Observable<any[]> {
+    return this.http.get<any>(this.countriesUrl).pipe(
+      map((res) => res.records) // extract records array
     );
   }
 }
