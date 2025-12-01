@@ -30,15 +30,36 @@ export class MapComponent implements OnInit {
   loadCountries(): void {
     if (!this.populationData) return;
 
+    // Add graphics
     this.populationData.forEach((c) => {
       const graphic = new Graphic({
-        geometry: { type: 'point', longitude: c.longitude || 0, latitude: c.latitude || 0 },
+        geometry: {
+          type: 'point',
+          longitude: c.longitude || 0,
+          latitude: c.latitude || 0,
+        },
         attributes: { name: c.name, population: c.Value },
-        popupTemplate: { title: '{name}', content: 'Population: {population}' },
+        popupTemplate: {
+          title: '{name}',
+          content: 'Population: {population}',
+        },
       });
 
       this.view.graphics.add(graphic);
-      graphic.on('click', () => this.countrySelected.emit(c));
+    });
+
+    // Click listener using hitTest
+    this.view.on('click', async (event) => {
+      const hit = await this.view.hitTest(event);
+
+      // Filter results that actually have a graphic
+      const graphicHit = hit.results
+        .map((r: any) => r.graphic) // r may be any type
+        .filter((g: any): g is Graphic => !!g);
+
+      if (graphicHit.length > 0) {
+        this.countrySelected.emit(graphicHit[0].attributes);
+      }
     });
   }
 }
