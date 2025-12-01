@@ -13,7 +13,7 @@ import * as echarts from 'echarts';
 })
 export class ChartComponent {
   @Input() chartOption: EChartsOption = {};
-  @Output() countrySelected = new EventEmitter<string>();
+  @Output() countrySelected = new EventEmitter<{ latitude: number; longitude: number }>();
 
   onChartClick(event: any) {
     if (event?.name) {
