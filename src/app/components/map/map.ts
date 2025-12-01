@@ -19,6 +19,11 @@ import SimpleLineSymbol from '@arcgis/core/symbols/SimpleLineSymbol';
 import SimpleMarkerSymbol from '@arcgis/core/symbols/SimpleMarkerSymbol';
 import '@arcgis/core/assets/esri/themes/light/main.css';
 
+type Coordinates =
+  | [number, number] // Point
+  | [number, number][] // MultiPoint / LineString
+  | [number, number][][] // MultiLineString / Polygon
+  | [number, number][][][];
 @Component({
   selector: 'app-map',
   imports: [CommonModule],
@@ -87,7 +92,7 @@ export class MapComponent implements OnInit, OnChanges {
       }
 
       // Function to convert GeoJSON to ArcGIS geometry
-      const convertGeoJSONToArcGIS = (geo: any) => {
+      const convertGeoJSONToArcGIS = (geo: { type: string; coordinates: any }) => {
         switch (geo.type) {
           case 'Point':
             return { type: 'point', longitude: geo.coordinates[0], latitude: geo.coordinates[1] };
@@ -101,7 +106,10 @@ export class MapComponent implements OnInit, OnChanges {
             return { type: 'polygon', rings: geo.coordinates };
           case 'MultiPolygon':
             // Flatten into multiple Polygon graphics (one per polygon)
-            return geo.coordinates.map((poly: any) => ({ type: 'polygon', rings: poly }));
+            return geo.coordinates.map((poly: unknown) => ({
+              type: 'polygon',
+              rings: poly,
+            }));
           default:
             console.warn('Unsupported GeoJSON type:', geo.type);
             return null;
