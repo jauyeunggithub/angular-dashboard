@@ -1,13 +1,18 @@
 import { TestBed } from '@angular/core/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { PopulationService } from './population';
 
-import { Population } from './population';
-
-describe('Population', () => {
-  let service: Population;
+describe('PopulationService', () => {
+  let service: PopulationService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(Population);
+    TestBed.configureTestingModule({
+      providers: [
+        PopulationService,
+        provideHttpClientTesting(), // replaces HttpClientTestingModule
+      ],
+    });
+    service = TestBed.inject(PopulationService);
   });
 
   it('should be created', () => {

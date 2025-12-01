@@ -1,19 +1,30 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { DashboardComponent } from './dashboard';
+import { PopulationService } from '../services/population';
+import { of } from 'rxjs';
+import { Country } from '../models/country';
+import { PopulationRecord } from '../models/population-record';
 
-import { Dashboard } from './dashboard';
-
-describe('Dashboard', () => {
-  let component: Dashboard;
-  let fixture: ComponentFixture<Dashboard>;
+describe('DashboardComponent', () => {
+  let component: DashboardComponent;
+  let fixture: ComponentFixture<DashboardComponent>;
+  let mockPopulationService: Partial<PopulationService>;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [Dashboard]
-    })
-    .compileComponents();
+    // Mock the service
+    mockPopulationService = {
+      getPopulationData: () => of([] as PopulationRecord[]),
+      getCountriesData: () => of([] as Country[]),
+    };
 
-    fixture = TestBed.createComponent(Dashboard);
+    await TestBed.configureTestingModule({
+      imports: [DashboardComponent], // standalone component
+      providers: [{ provide: PopulationService, useValue: mockPopulationService }],
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(DashboardComponent);
     component = fixture.componentInstance;
+    fixture.detectChanges(); // initialize template and bindings
     await fixture.whenStable();
   });
 
