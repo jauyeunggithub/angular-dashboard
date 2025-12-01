@@ -17,6 +17,7 @@ import { Country } from '../../models/country';
 import SimpleFillSymbol from '@arcgis/core/symbols/SimpleFillSymbol';
 import SimpleLineSymbol from '@arcgis/core/symbols/SimpleLineSymbol';
 import SimpleMarkerSymbol from '@arcgis/core/symbols/SimpleMarkerSymbol';
+import '@arcgis/core/assets/esri/themes/light/main.css';
 
 @Component({
   selector: 'app-map',
