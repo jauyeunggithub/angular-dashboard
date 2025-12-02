@@ -1,6 +1,3 @@
-// Allowed geometry types
-type GeometryType = 'point' | 'multipoint' | 'polyline' | 'polygon';
-
 // Strongly typed ArcGIS geometries
 interface ArcGISPoint {
   type: 'point';

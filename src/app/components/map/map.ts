@@ -19,11 +19,6 @@ import SimpleLineSymbol from '@arcgis/core/symbols/SimpleLineSymbol';
 import SimpleMarkerSymbol from '@arcgis/core/symbols/SimpleMarkerSymbol';
 import { ArcGISGeometry } from '../../models/arc-gisgeometry';
 
-type Coordinates =
-  | [number, number] // Point
-  | [number, number][] // MultiPoint / LineString
-  | [number, number][][] // MultiLineString / Polygon
-  | [number, number][][][];
 @Component({
   selector: 'app-map',
   imports: [CommonModule],
@@ -31,7 +26,7 @@ type Coordinates =
   styleUrls: ['./map.css'],
 })
 export class MapComponent implements OnInit, OnChanges {
-  @Output() countrySelected = new EventEmitter<any>();
+  @Output() countrySelected = new EventEmitter<Country>();
   @Input() populationData: PopulationRecord[] = [];
   @Input() countriesData: Country[] = [];
   view!: MapView;
